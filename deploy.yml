@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inlaze-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inlaze
+  template:
+    metadata:
+      labels:
+        app: inlaze
+    spec:
+      containers:
+      - name: inlaze
+        image: ghcr.io/baope2/inlaze:v1
+        ports:
+        - containerPort: 3000
