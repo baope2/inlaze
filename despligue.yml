@@ -1,0 +1,26 @@
+trigger:
+- main
+
+stages:
+- stage: Despliegue
+  displayName: 'Despliegue de Front inlaze'
+  pool:
+    name: 'Agentes1AWS'
+  jobs:
+  - job: DesplegarAulappWeb
+    displayName: 'Desplegar y reiniciar Front inlaze'
+
+    steps:
+    - task: SSH@0
+      displayName: 'Actualizar y reiniciar Front inlaze'
+      inputs:
+        sshEndpoint: 'server_conection'
+        runOptions: 'commands'
+        commands: |
+          echo "Realizar pull sobre la rama main"
+          cd /opt/frontend-challenge-base-main/ && git pull origin main
+          cd /opt/frontend-challenge-base-main/ && npm install
+          cd /opt/frontend-challenge-base-main/ && docker buil . -t ghcr.io/baope2/inlaze:v1
+          cd /opt/frontend-challenge-base-main/ && docker push ghcr.io/baope2/inlaze:v1
+        failOnStdErr: false
+        readyTimeout: '20000'
